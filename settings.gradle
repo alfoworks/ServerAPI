@@ -1,0 +1,3 @@
+rootProject.name = 'serverapi'
+
+include 'serverapi-common', 'serverapi-spigot', 'serverapi-sponge'

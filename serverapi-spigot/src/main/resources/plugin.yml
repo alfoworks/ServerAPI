@@ -1,0 +1,4 @@
+name: ServerAPI
+version: @version@
+main: ru.alfomine.serverapi.spigot.ServerAPISpigot
+api-version: 1.13
