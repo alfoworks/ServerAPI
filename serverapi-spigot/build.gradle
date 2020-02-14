@@ -20,6 +20,10 @@ processResources {
     }
 }
 
+jar {
+    from project(":serverapi-common").sourceSets.main.output
+}
+
 shadowJar {
     dependencies {
         include(dependency(':serverapi-common'))

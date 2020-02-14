@@ -1,6 +1,6 @@
 package ru.alfomine.serverapi.server.commands;
 
-import ru.alfomine.serverapi.CommandResult;
+import ru.alfomine.serverapi.server.CommandResult;
 
 import java.util.List;
 

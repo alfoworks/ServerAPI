@@ -1,4 +1,4 @@
-package ru.alfomine.serverapi;
+package ru.alfomine.serverapi.server;
 
 public class CommandResult {
     private int code;

@@ -5,13 +5,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.*;
-import ru.alfomine.serverapi.CommandResult;
 import ru.alfomine.serverapi.api.IServer;
 import ru.alfomine.serverapi.server.commands.ServerCommand;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HTTPServer implements Runnable {
     private int port;

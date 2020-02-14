@@ -7,6 +7,10 @@ dependencies {
     compile 'org.spongepowered:spongeapi:7.1.0'
 }
 
+jar {
+    from project(":serverapi-common").sourceSets.main.output
+}
+
 sponge.plugin.id = pluginId
 
 shadowJar {
