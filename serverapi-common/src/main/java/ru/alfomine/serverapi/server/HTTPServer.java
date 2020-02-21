@@ -6,7 +6,8 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.*;
 import ru.alfomine.serverapi.api.IServer;
-import ru.alfomine.serverapi.server.commands.ServerCommand;
+import ru.alfomine.serverapi.server.methods.Method;
+import ru.alfomine.serverapi.server.methods.MethodCommand;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,13 +20,13 @@ import java.util.List;
 public class HTTPServer implements Runnable {
     private int port;
     private IServer serverImpl;
-    private List<ServerCommand> commands = new ArrayList<>();
+    private List<Method> methods = new ArrayList<>();
 
     public HTTPServer(int port, IServer serverImpl) {
         this.port = port;
         this.serverImpl = serverImpl;
 
-
+        methods.add(new MethodCommand());
     }
 
     @Override
@@ -90,18 +91,18 @@ public class HTTPServer implements Runnable {
             List<String> commandArgs = new Gson().fromJson(jsonCommand.get("args"), new TypeToken<List<String>>() {
             }.getType());
 
-            for (ServerCommand command : commands) {
+            for (Method command : methods) {
                 if (command.getName().equalsIgnoreCase(commandName)) {
                     CommandResult result;
 
                     try {
-                        result = command.run(commandArgs);
+                        result = command.run(commandArgs, serverImpl);
                     } catch (Exception e) {
                         responseString(exchange, 500, "Failed to execute command: " + e.getMessage());
                         return;
                     }
 
-                    responseString(exchange, result.getCode(), result.getBody());
+                    responseString(exchange, result.code, new Gson().toJson(result));
 
                     return;
                 }

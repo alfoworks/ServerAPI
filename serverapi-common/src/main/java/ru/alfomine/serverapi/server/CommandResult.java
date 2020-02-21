@@ -1,19 +1,37 @@
 package ru.alfomine.serverapi.server;
 
+import ru.alfomine.serverapi.api.ServerInfo;
+
 public class CommandResult {
-    private int code;
-    private String body;
+    public transient int code;
+    public String error;
+    public Object response;
 
-    public CommandResult(int code, String body) {
+    public CommandResult ok(String response) {
+        this.code = 200;
+        this.response = response;
+
+        return this;
+    }
+
+    public CommandResult ok(String[] response) {
+        this.code = 200;
+        this.response = String.join(",", response);
+
+        return this;
+    }
+
+    public CommandResult ok(ServerInfo response) {
+        this.code = 200;
+        this.response = response;
+
+        return this;
+    }
+
+    public CommandResult error(String error, int code) {
         this.code = code;
-        this.body = body;
-    }
+        this.error = error;
 
-    public int getCode() {
-        return code;
-    }
-
-    public String getBody() {
-        return body;
+        return this;
     }
 }
