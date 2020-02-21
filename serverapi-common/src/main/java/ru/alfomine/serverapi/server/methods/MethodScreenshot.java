@@ -35,7 +35,7 @@ public class MethodScreenshot extends Method {
         String screenshot;
 
         try {
-            screenshot = server.getPlayerScreenshot(args.get(0));
+            screenshot = server.getPlayerScreenshot(args.get(0), quality);
         } catch (PlayerNotFoundException e) {
             return new CommandResult().error("Player not found", 404);
         } catch (ScreenshotTimeoutException e) {

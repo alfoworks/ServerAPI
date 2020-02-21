@@ -5,7 +5,7 @@ import ru.alfomine.serverapi.api.exception.ServerAPIBaseException;
 public interface IServer {
     String runCommand(String command) throws ServerAPIBaseException; // Выполнить команду
 
-    String getPlayerScreenshot(String nick) throws ServerAPIBaseException; // Получить скриншот игрока
+    String getPlayerScreenshot(String nick, String quality) throws ServerAPIBaseException; // Получить скриншот игрока
 
     void sendDiscordMessage(String nick, String message) throws ServerAPIBaseException; // Отправить на сервер сообщение из дискорда
 
