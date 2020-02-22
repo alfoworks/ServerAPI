@@ -22,7 +22,11 @@ public class ServerImplSponge implements IServer {
         Task.builder().execute(task).name("ServerAPI command run").submit(Sponge.getPluginManager().getPlugin("serverapi").get().getInstance().get());
 
         while (task.output == null) {
+            try {
+                Thread.sleep(0); // Просто нужен какой-нибудь рандомный код, ибо пустой блок просто зависает.
+            } catch (InterruptedException ignored) {
 
+            }
         }
 
         return task.output;
@@ -35,7 +39,7 @@ public class ServerImplSponge implements IServer {
 
     @Override
     public void sendDiscordMessage(String nick, String message) {
-        Sponge.getServer().getBroadcastChannel().send(TextSerializers.FORMATTING_CODE.deserialize(String.format("&7-&2G &9| Discord | &9%s&f: %s", nick, message)));
+        Sponge.getServer().getBroadcastChannel().send(TextSerializers.FORMATTING_CODE.deserialize(String.format("&7-&2G &9| Discord | &6%s&f: %s", nick, message)));
     }
 
     @Override

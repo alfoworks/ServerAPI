@@ -6,8 +6,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.*;
 import ru.alfomine.serverapi.api.IServer;
-import ru.alfomine.serverapi.server.methods.Method;
-import ru.alfomine.serverapi.server.methods.MethodCommand;
+import ru.alfomine.serverapi.server.methods.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,6 +26,10 @@ public class HTTPServer implements Runnable {
         this.serverImpl = serverImpl;
 
         methods.add(new MethodCommand());
+        methods.add(new MethodDiscord());
+        methods.add(new MethodInfo());
+        methods.add(new MethodPlayerList());
+        methods.add(new MethodScreenshot());
     }
 
     @Override
