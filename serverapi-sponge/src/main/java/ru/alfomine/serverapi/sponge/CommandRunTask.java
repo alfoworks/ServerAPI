@@ -17,5 +17,8 @@ public class CommandRunTask implements Runnable {
         Sponge.getCommandManager().process(source, command);
 
         output = source.getOutput();
+
+        System.out.println("Anus");
+        System.out.println(output);
     }
 }
