@@ -82,31 +82,33 @@ public class HTTPServer implements Runnable {
                 return;
             }
 
-            if (!jsonCommand.has("cmd") || !jsonCommand.has("args")) {
+            if (!jsonCommand.has("method") || !jsonCommand.has("args")) {
                 responseString(exchange, 400, "Required JSON fields not found");
                 return;
             }
 
-            String commandName = jsonCommand.get("name").getAsString();
-            List<String> commandArgs = new Gson().fromJson(jsonCommand.get("args"), new TypeToken<List<String>>() {
+            String methodName = jsonCommand.get("method").getAsString();
+            List<String> methodArgs = new Gson().fromJson(jsonCommand.get("args"), new TypeToken<List<String>>() {
             }.getType());
 
+            CommandResult result = null;
+
             for (Method command : methods) {
-                if (command.getName().equalsIgnoreCase(commandName)) {
-                    CommandResult result;
-
+                if (command.getName().equalsIgnoreCase(methodName)) {
                     try {
-                        result = command.run(commandArgs, serverImpl);
+                        result = command.run(methodArgs, serverImpl);
                     } catch (Exception e) {
-                        responseString(exchange, 500, "Failed to execute command: " + e.getMessage());
-                        return;
+                        result = new CommandResult().error("Failed to execute command: " + e.getMessage(), 500);
                     }
-
-                    responseString(exchange, result.code, new Gson().toJson(result));
-
-                    return;
+                    break;
                 }
             }
+
+            if (result == null) {
+                result = new CommandResult().error("Unknown method: " + methodName, 400);
+            }
+
+            responseString(exchange, result.code, new Gson().toJson(result));
         }
     }
 
