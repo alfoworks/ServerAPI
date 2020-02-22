@@ -3,9 +3,7 @@ package ru.alfomine.serverapi.sponge;
 import org.spongepowered.api.Sponge;
 
 public class CommandRunTask implements Runnable {
-    public static String lastCmd;
-    public static boolean end = false;
-
+    String output = null;
     private String command;
 
     public CommandRunTask(String command) {
@@ -18,7 +16,6 @@ public class CommandRunTask implements Runnable {
 
         Sponge.getCommandManager().process(source, command);
 
-        lastCmd = source.getOutput();
-        end = true;
+        output = source.getOutput();
     }
 }

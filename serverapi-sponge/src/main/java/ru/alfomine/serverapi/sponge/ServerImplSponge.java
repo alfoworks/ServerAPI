@@ -17,13 +17,15 @@ public class ServerImplSponge implements IServer {
 
     @Override
     public String runCommand(String command) {
-        Task.builder().execute(new CommandRunTask(command)).name("ServerAPI command run").submit(Sponge.getPluginManager().getPlugin("serverapi").get().getInstance().get());
+        CommandRunTask task = new CommandRunTask(command);
 
-        while (!CommandRunTask.end) {
+        Task.builder().execute(task).name("ServerAPI command run").submit(Sponge.getPluginManager().getPlugin("serverapi").get().getInstance().get());
+
+        while (task.output == null) {
+
         }
 
-        CommandRunTask.end = false;
-        return CommandRunTask.lastCmd;
+        return task.output;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class ServerImplSponge implements IServer {
     }
 
     @Override
-    public ServerInfo getServerInfo() throws ServerAPIBaseException {
+    public ServerInfo getServerInfo() {
         int publicPlayerCount = getPlayerList(true).length;
         int maxPlayers = Sponge.getServer().getMaxPlayers();
         long serverUptime = System.currentTimeMillis() - ServerAPISponge.startTime;
