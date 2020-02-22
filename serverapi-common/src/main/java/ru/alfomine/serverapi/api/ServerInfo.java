@@ -4,9 +4,9 @@ public class ServerInfo {
     public int publicPlayerCount;
     public int maxPlayers;
     public long serverUptime;
-    public int serverTPS;
+    public double serverTPS;
 
-    ServerInfo(int publicPlayerCount, int maxPlayers, int serverUptime, int serverTPS) {
+    public ServerInfo(int publicPlayerCount, int maxPlayers, long serverUptime, double serverTPS) {
         this.publicPlayerCount = publicPlayerCount;
         this.maxPlayers = maxPlayers;
         this.serverUptime = serverUptime;

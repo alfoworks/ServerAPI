@@ -1,10 +1,7 @@
 package ru.alfomine.serverapi.server.methods;
 
 import ru.alfomine.serverapi.api.IServer;
-import ru.alfomine.serverapi.api.exception.PlayerNotFoundException;
-import ru.alfomine.serverapi.api.exception.ScreenshotException;
-import ru.alfomine.serverapi.api.exception.ScreenshotTimeoutException;
-import ru.alfomine.serverapi.api.exception.ServerAPIBaseException;
+import ru.alfomine.serverapi.api.exception.*;
 import ru.alfomine.serverapi.server.CommandResult;
 
 import java.util.Arrays;
@@ -37,11 +34,13 @@ public class MethodScreenshot extends Method {
         try {
             screenshot = server.getPlayerScreenshot(args.get(0), quality);
         } catch (PlayerNotFoundException e) {
-            return new CommandResult().error("Player not found", 404);
+            return new CommandResult().error(e.getMessage(), 404);
         } catch (ScreenshotTimeoutException e) {
-            return new CommandResult().error("Player didn't send anything", 524);
+            return new CommandResult().error(e.getMessage(), 524);
+        } catch (ScreenshotNotSupportedException e) {
+            return new CommandResult().error(e.getMessage(), 405);
         } catch (ScreenshotException e) {
-            return new CommandResult().error("Server error", 500);
+            return new CommandResult().error(e.getMessage(), 500);
         }
 
         return new CommandResult().ok(screenshot);
