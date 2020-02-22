@@ -2,6 +2,7 @@ package ru.alfomine.serverapi.sponge;
 
 import com.google.inject.Inject;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
@@ -25,10 +26,13 @@ import java.nio.file.Path;
 public class ServerAPISponge {
     public static HTTPServer server;
     public static long startTime;
+
     @Inject
     public static Logger logger;
     private static CommentedConfigurationNode configNode;
+
     private Task serverTask;
+
     @Inject
     @ConfigDir(sharedRoot = false)
     private Path configDir;
@@ -62,6 +66,9 @@ public class ServerAPISponge {
 
     @Listener
     public void preInit(GamePreInitializationEvent event) {
+        configFile = configDir.resolve("config.conf");
+        configLoader = HoconConfigurationLoader.builder().setPath(configFile).build();
+
         configSetup();
     }
 
