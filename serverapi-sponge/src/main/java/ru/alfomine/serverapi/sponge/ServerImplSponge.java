@@ -163,7 +163,7 @@ public class ServerImplSponge implements IServer {
 
     @Override
     public void serverLog(String message) {
-        ServerAPISponge.logger.info("[ServerAPI] " + message);
+        ServerAPISponge.logger.info("\u00A7a[ServerAPI] " + message);
     }
 
     // ================================= //

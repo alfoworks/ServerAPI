@@ -25,7 +25,6 @@ public class ScreenshotListener implements RawDataListener {
 
         if (isEnd) {
             ok = true;
-            System.out.println("Received ack");
         } else {
             packets++;
 
