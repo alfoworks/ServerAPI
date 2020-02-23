@@ -16,10 +16,12 @@ public class CommandRunTask implements Runnable {
 
         Sponge.getCommandManager().process(source, command);
 
-        try {
-            Thread.sleep(1000); // Зачем? Асинхронные команды (которые очень нужны) просто не успеют ничего высрать.
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (output.equals("")) {
+            try {
+                Thread.sleep(1000); // Зачем? Асинхронные команды (которые очень нужны) просто не успеют ничего высрать.
+            } catch (InterruptedException ignored) {
+
+            }
         }
 
         output = source.getOutput();

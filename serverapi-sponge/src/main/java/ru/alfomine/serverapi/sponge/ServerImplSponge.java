@@ -3,15 +3,23 @@ package ru.alfomine.serverapi.sponge;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.network.ChannelBinding;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import ru.alfomine.serverapi.api.IServer;
 import ru.alfomine.serverapi.api.ServerInfo;
-import ru.alfomine.serverapi.api.exception.ScreenshotNotSupportedException;
+import ru.alfomine.serverapi.api.exception.PlayerNotFoundException;
+import ru.alfomine.serverapi.api.exception.ScreenshotException;
+import ru.alfomine.serverapi.api.exception.ScreenshotTimeoutException;
 import ru.alfomine.serverapi.api.exception.ServerAPIBaseException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Random;
 
 public class ServerImplSponge implements IServer {
 
@@ -19,7 +27,7 @@ public class ServerImplSponge implements IServer {
     public String runCommand(String command) {
         CommandRunTask task = new CommandRunTask(command);
 
-        Task.builder().execute(task).name("ServerAPI command run").submit(Sponge.getPluginManager().getPlugin("serverapi").get().getInstance().get());
+        Task.builder().execute(task).name("ServerAPI command run").submit(ServerAPISponge.getPlugin());
 
         while (task.output == null) {
             try {
@@ -34,7 +42,44 @@ public class ServerImplSponge implements IServer {
 
     @Override
     public String getPlayerScreenshot(String nick, String quality) throws ServerAPIBaseException {
-        throw new ScreenshotNotSupportedException();
+        if (!Sponge.getServer().getPlayer(nick).isPresent()) {
+            throw new PlayerNotFoundException();
+        }
+
+        ChannelBinding.RawDataChannel channel = Sponge.getGame().getChannelRegistrar().createRawChannel(ServerAPISponge.getPlugin(), generateRandomChannelName());
+        ScreenshotListener listener = new ScreenshotListener();
+        channel.addListener(listener);
+
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(b);
+
+        try {
+            out.writeUTF("ILoveNoire"); // Типа клиент по этой строчке будет понимать, что от него хотят скрин
+            out.writeUTF(quality);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new ScreenshotException();
+        }
+
+        channel.sendTo(Sponge.getServer().getPlayer(nick).get(), buf -> buf.writeByteArray(b.toByteArray()));
+
+        long startTime = System.currentTimeMillis();
+
+        while (!listener.ok) {
+            if (System.currentTimeMillis() < startTime + 5000) {
+                break;
+            }
+        }
+
+        if (!listener.ok) {
+            throw new ScreenshotTimeoutException();
+        }
+
+        if (listener.result.length == 0) {
+            throw new ScreenshotException();
+        }
+
+        return Base64.getEncoder().encodeToString(listener.result);
     }
 
     @Override
@@ -70,5 +115,23 @@ public class ServerImplSponge implements IServer {
     @Override
     public void serverLog(String message) {
         ServerAPISponge.logger.info(message);
+    }
+
+    // ================================= //
+
+    private String generateRandomChannelName() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
+
+        int len = new Random().nextInt(9) + 1;
+
+        StringBuilder sb = new StringBuilder(len);
+
+        for (int i = 0; i < len; i++) {
+            int index = (int) (chars.length() * Math.random());
+
+            sb.append(chars.charAt(index));
+        }
+
+        return sb.toString();
     }
 }

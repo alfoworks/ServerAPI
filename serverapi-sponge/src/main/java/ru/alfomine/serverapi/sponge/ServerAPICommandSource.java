@@ -26,12 +26,10 @@ public class ServerAPICommandSource implements ConsoleSource {
 
     @Override
     public void sendMessage(Text message) {
-        System.out.println("Fuck!");
         outputList.add(message.toPlain());
     }
 
     public String getOutput() {
-        System.out.println(outputList.size());
         return String.join("\n", outputList);
     }
 

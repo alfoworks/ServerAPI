@@ -48,6 +48,10 @@ public class ServerAPISponge {
         ServerAPISponge.logger = logger;
     }
 
+    public static Object getPlugin() {
+        return Sponge.getPluginManager().getPlugin("serverapi").get().getInstance().get();
+    }
+
     @Listener
     public void onServerStart(GameStartedServerEvent event) {
         server = new HTTPServer(getConfig().getNode("server_api", "port").getInt(), new ServerImplSponge());
