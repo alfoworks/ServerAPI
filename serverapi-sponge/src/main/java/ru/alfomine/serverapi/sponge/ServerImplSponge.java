@@ -47,6 +47,7 @@ public class ServerImplSponge implements IServer {
             throw new PlayerNotFoundException();
         }
 
+        Player player = Sponge.getServer().getPlayer(nick).get();
         String channelName = generateRandomChannelName();
 
         ChannelBinding.RawDataChannel channel = Sponge.getGame().getChannelRegistrar().createRawChannel(ServerAPISponge.getPlugin(), channelName);
@@ -56,7 +57,7 @@ public class ServerImplSponge implements IServer {
         // Отправка пакета //
 
         PacketGate packetGate = Sponge.getServiceManager().provide(PacketGate.class).orElseThrow(ScreenshotException::new);
-        PacketConnection connection = packetGate.connectionByPlayer(Sponge.getServer().getPlayer(nick).get()).orElseThrow(ScreenshotException::new);
+        PacketConnection connection = packetGate.connectionByPlayer(player).orElseThrow(ScreenshotException::new);
 
         ByteBuf byteBuf = Unpooled.buffer(0);
         PacketBuffer buffer = new PacketBuffer(byteBuf);
@@ -94,22 +95,38 @@ public class ServerImplSponge implements IServer {
 
         long startTime = System.currentTimeMillis();
 
-        while (!listener.ok) {
-            if (System.currentTimeMillis() > startTime + 5000) {
+        while (true) {
+            if (listener.ok) {
                 break;
+            } else {
+                if (System.currentTimeMillis() > startTime + 5000) {
+                    break;
+                } else {
+                    try {
+                        Thread.sleep(0);
+                    } catch (InterruptedException e) {
+                        throw new ScreenshotException();
+                    }
+                }
             }
         }
 
         if (!listener.ok) {
+            serverLog(String.format("[screenshot] Failed to take screenshot of player %s: timed out.", player.getName()));
+
             throw new ScreenshotTimeoutException();
         }
 
         if (listener.result.length == 0) {
+            serverLog(String.format("[screenshot] Failed to take screenshot of player %s: array is empty", player.getName()));
+
             throw new ScreenshotException();
         }
 
         channel.removeListener(listener);
         Sponge.getChannelRegistrar().unbindChannel(channel);
+
+        serverLog(String.format("[screenshot] Made screenshot of player %s which took %s packets.", player.getName(), listener.packets));
 
         return Base64.getEncoder().encodeToString(listener.result);
     }
@@ -146,7 +163,7 @@ public class ServerImplSponge implements IServer {
 
     @Override
     public void serverLog(String message) {
-        ServerAPISponge.logger.info(message);
+        ServerAPISponge.logger.info("[ServerAPI] " + message);
     }
 
     // ================================= //

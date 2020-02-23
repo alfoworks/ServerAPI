@@ -32,6 +32,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="serverapi-sponge_main" />
     <orderEntry type="module" module-name="serverapi-sponge_api" />
+    <orderEntry type="library" name="Gradle: :packetgate:" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -41,7 +42,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Gradle: :packetgate:" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>

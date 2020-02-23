@@ -13,6 +13,8 @@ public class ScreenshotListener implements RawDataListener {
     boolean ok = false;
     byte[] result = new byte[]{};
 
+    int packets = 0;
+
     @Override
     public void handlePayload(ChannelBuf data, RemoteConnection connection, Platform.Type side) {
         if (!(connection instanceof PlayerConnection)) {
@@ -23,7 +25,10 @@ public class ScreenshotListener implements RawDataListener {
 
         if (isEnd) {
             ok = true;
+            System.out.println("Received ack");
         } else {
+            packets++;
+
             byte[] chunkByteArray = data.readBytes(min(10240, data.available()));
             byte[] prevArr = result;
 

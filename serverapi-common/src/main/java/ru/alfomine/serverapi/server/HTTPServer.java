@@ -36,7 +36,7 @@ public class HTTPServer implements Runnable {
     public void run() {
         HttpServer server;
 
-        serverImpl.serverLog("[SERVERAPI_SERVER] Starting HTTP server at port " + port);
+        serverImpl.serverLog("Starting HTTP server at port " + port);
 
         try {
             server = HttpServer.create();
@@ -48,9 +48,9 @@ public class HTTPServer implements Runnable {
             server.setExecutor(null);
             server.start();
 
-            serverImpl.serverLog("[AFMCP_APISERVER] HTTP server has been successfully started!");
+            serverImpl.serverLog("HTTP server has been successfully started!");
         } catch (Exception e) {
-            serverImpl.serverLog("[AFMCP_APISERVER] Error starting api server!");
+            serverImpl.serverLog("Error starting api server!");
             e.printStackTrace();
         }
     }
@@ -100,15 +100,21 @@ public class HTTPServer implements Runnable {
                 if (command.getName().equalsIgnoreCase(methodName)) {
                     try {
                         result = command.run(methodArgs, serverImpl);
+
+                        serverImpl.serverLog(String.format("Executed API method %s", methodName));
                     } catch (Exception e) {
-                        result = new CommandResult().error("Failed to execute command: " + e.getMessage(), 500);
+                        result = new CommandResult().error("Failed to execute API method: " + e.getMessage(), 500);
+
+                        serverImpl.serverLog(String.format("Failed to execute API method %s: %s", methodName, e.getMessage()));
                     }
                     break;
                 }
             }
 
             if (result == null) {
-                result = new CommandResult().error("Unknown method: " + methodName, 400);
+                result = new CommandResult().error("Unknown API method: " + methodName, 400);
+
+                serverImpl.serverLog(String.format("Unknown API method %s", methodName));
             }
 
             responseString(exchange, result.code, new Gson().toJson(result));
