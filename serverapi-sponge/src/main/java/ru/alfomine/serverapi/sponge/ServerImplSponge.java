@@ -66,7 +66,7 @@ public class ServerImplSponge implements IServer {
         long startTime = System.currentTimeMillis();
 
         while (!listener.ok) {
-            if (System.currentTimeMillis() < startTime + 5000) {
+            if (System.currentTimeMillis() > startTime + 5000) {
                 break;
             }
         }
