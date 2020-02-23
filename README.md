@@ -19,7 +19,7 @@
 * players <public (bool в виде строки)> - получить список игроков. При public = true, игроки в ванише не будут появлятся в списке.
     * 200 <список игроков (str) (comma-delimited)>
 * info - получить инофрмацию о сервере
-    * 200 <JSON объект> (пример объедка: `{"playerCount": 228, "maxPlayers": 1488, "serverUptime": 99999999, "tps": 20}`)
+    * 200 <JSON объект> (пример объедка: `{"playerCount": 228, "maxPlayers": 1488, "serverUptime": 99999999, "serverTPS": 20}`)
 * scr <ник (str)> [quality (str) (low/high/grayscale) (default: low)] - получить скриншот игрока
     * 200 <base64 png>
     * 524 (превышено время ожидания ответа)
