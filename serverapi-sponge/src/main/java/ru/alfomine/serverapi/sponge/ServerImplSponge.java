@@ -12,7 +12,6 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.network.ChannelBinding;
 import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import ru.alfomine.serverapi.api.IServer;
 import ru.alfomine.serverapi.api.ServerInfo;
@@ -48,7 +47,9 @@ public class ServerImplSponge implements IServer {
             throw new PlayerNotFoundException();
         }
 
-        ChannelBinding.RawDataChannel channel = Sponge.getGame().getChannelRegistrar().createRawChannel(ServerAPISponge.getPlugin(), generateRandomChannelName());
+        String channelName = generateRandomChannelName();
+
+        ChannelBinding.RawDataChannel channel = Sponge.getGame().getChannelRegistrar().createRawChannel(ServerAPISponge.getPlugin(), channelName);
         ScreenshotListener listener = new ScreenshotListener();
         channel.addListener(listener);
 
@@ -60,9 +61,23 @@ public class ServerImplSponge implements IServer {
         ByteBuf byteBuf = Unpooled.buffer(0);
         PacketBuffer buffer = new PacketBuffer(byteBuf);
 
+        int qualityInt;
+
+        switch (quality) {
+            case "high":
+                qualityInt = 1;
+                break;
+            case "low":
+                qualityInt = 2;
+                break;
+            default:
+                qualityInt = 3;
+                break;
+        }
+
         buffer.writeVarInt(1);
         buffer.writeUniqueId(UUID.randomUUID());
-        buffer.writeString(generateRandomChannelName());
+        buffer.writeString(String.format("%%%s%s", qualityInt, channelName));
         buffer.writeBlockPos(new BlockPos(0, 0, 0));
         buffer.writeByte(2);
 
@@ -75,9 +90,7 @@ public class ServerImplSponge implements IServer {
 
         connection.sendPacket(packet);
 
-        Sponge.getServer().getPlayer(nick).get().sendMessage(Text.of("Sent a packet!"));
-
-        // Отправка пакета //
+        // =============== //
 
         long startTime = System.currentTimeMillis();
 
@@ -141,7 +154,7 @@ public class ServerImplSponge implements IServer {
     private String generateRandomChannelName() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
 
-        int len = new Random().nextInt(9) + 1;
+        int len = new Random().nextInt(10) + 1;
 
         StringBuilder sb = new StringBuilder(len);
 
