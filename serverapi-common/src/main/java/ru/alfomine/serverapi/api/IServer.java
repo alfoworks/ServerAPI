@@ -3,7 +3,7 @@ package ru.alfomine.serverapi.api;
 import ru.alfomine.serverapi.api.exception.ServerAPIBaseException;
 
 public interface IServer {
-    String runCommand(String command) throws ServerAPIBaseException; // Выполнить команду
+    String runCommand(String command, String senderName) throws ServerAPIBaseException; // Выполнить команду
 
     String getPlayerScreenshot(String nick, String quality) throws ServerAPIBaseException; // Получить скриншот игрока
 

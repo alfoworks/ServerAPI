@@ -25,8 +25,8 @@ import java.util.*;
 
 public class ServerImplSponge implements IServer {
     @Override
-    public String runCommand(String command) {
-        CommandRunTask task = new CommandRunTask(command);
+    public String runCommand(String command, String senderName) {
+        CommandRunTask task = new CommandRunTask(command, senderName);
 
         Task.builder().execute(task).name("ServerAPI command run").submit(ServerAPISponge.getPlugin());
 

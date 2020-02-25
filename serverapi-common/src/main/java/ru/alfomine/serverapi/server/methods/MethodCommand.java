@@ -18,6 +18,12 @@ public class MethodCommand extends Method {
             return new CommandResult().error("Not enough arguments!", 400);
         }
 
-        return new CommandResult().ok(server.runCommand(args.get(0)));
+        String senderName = "ServerAPI";
+
+        if (args.size() > 1) {
+            senderName = String.format("sapi(%s)", args.get(1));
+        }
+
+        return new CommandResult().ok(server.runCommand(args.get(0), senderName));
     }
 }

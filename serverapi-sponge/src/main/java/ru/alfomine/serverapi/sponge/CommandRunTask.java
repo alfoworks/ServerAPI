@@ -5,14 +5,16 @@ import org.spongepowered.api.Sponge;
 public class CommandRunTask implements Runnable {
     String output = null;
     private String command;
+    private String senderName;
 
-    public CommandRunTask(String command) {
+    CommandRunTask(String command, String senderName) {
         this.command = command;
+        this.senderName = senderName;
     }
 
     @Override
     public void run() {
-        ServerAPICommandSource source = new ServerAPICommandSource();
+        ServerAPICommandSource source = new ServerAPICommandSource(senderName);
 
         Sponge.getCommandManager().process(source, command);
 

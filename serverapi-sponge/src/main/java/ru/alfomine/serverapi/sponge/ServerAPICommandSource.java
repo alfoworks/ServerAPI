@@ -18,10 +18,15 @@ import java.util.Set;
 
 public class ServerAPICommandSource implements ConsoleSource {
     private List<String> outputList = new ArrayList<>();
+    private String name;
+
+    public ServerAPICommandSource(String name) {
+        this.name = name;
+    }
 
     @Override
     public String getName() {
-        return "ServerAPI";
+        return name;
     }
 
     @Override
