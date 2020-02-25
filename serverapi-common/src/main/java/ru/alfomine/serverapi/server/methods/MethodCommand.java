@@ -21,7 +21,7 @@ public class MethodCommand extends Method {
         String senderName = "ServerAPI";
 
         if (args.size() > 1) {
-            senderName = String.format("sapi(%s)", args.get(1));
+            senderName = String.format("@%s", args.get(1)).substring(0, Math.min(args.get(1).length() + 1, 16));
         }
 
         return new CommandResult().ok(server.runCommand(args.get(0), senderName));
