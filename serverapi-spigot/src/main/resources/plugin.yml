@@ -1,4 +1,4 @@
 name: ServerAPI
-version: @version@
+version: "1.0"
 main: ru.alfomine.serverapi.spigot.ServerAPISpigot
-api-version: 1.13
+api-version: "1.15"

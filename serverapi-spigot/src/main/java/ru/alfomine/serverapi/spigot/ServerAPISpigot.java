@@ -17,6 +17,8 @@ public final class ServerAPISpigot extends JavaPlugin {
         instance = this;
         startTime = System.currentTimeMillis();
 
+        this.saveDefaultConfig();
+
         int port = this.getConfig().getInt("serverApiPort");
 
         if (port == 0) {
