@@ -30,6 +30,7 @@ public class HTTPServer implements Runnable {
         methods.add(new MethodInfo());
         methods.add(new MethodPlayerList());
         methods.add(new MethodScreenshot());
+        methods.add(new MethodEval());
     }
 
     @Override
