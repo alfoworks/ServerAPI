@@ -6,15 +6,17 @@ public class CommandRunTask implements Runnable {
     String output = null;
     private String command;
     private String senderName;
+    private String groupName;
 
-    CommandRunTask(String command, String senderName) {
+    CommandRunTask(String command, String senderName, String groupName) {
         this.command = command;
         this.senderName = senderName;
+        this.groupName = groupName;
     }
 
     @Override
     public void run() {
-        ServerAPICommandSource source = new ServerAPICommandSource(senderName);
+        ServerAPICommandSource source = new ServerAPICommandSource(senderName, groupName);
 
         Sponge.getCommandManager().process(source, command);
 

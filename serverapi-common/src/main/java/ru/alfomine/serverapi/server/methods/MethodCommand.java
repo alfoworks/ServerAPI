@@ -19,11 +19,16 @@ public class MethodCommand extends Method {
         }
 
         String senderName = "ServerAPI";
+        String group = null;
 
         if (args.size() > 1) {
             senderName = String.format("@%s", args.get(1)).substring(0, Math.min(args.get(1).length() + 1, 16));
+
+            if (args.size() > 2) {
+                group = args.get(2);
+            }
         }
 
-        return new CommandResult().ok(server.runCommand(args.get(0), senderName));
+        return new CommandResult().ok(server.runCommand(args.get(0), senderName, group));
     }
 }

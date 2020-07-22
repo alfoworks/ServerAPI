@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
 
 public class ServerImplSpigot implements IServer {
     @Override
-    public String runCommand(String command, String senderName) throws ServerAPIBaseException {
+    public String runCommand(String command, String senderName, String groupName) throws ServerAPIBaseException {
+        // для спигота поддержки групп пока нет, как нужно будет - сделаю.
+
         CommandRunTask task = new CommandRunTask(command, senderName);
 
         task.runTask(ServerAPISpigot.instance);

@@ -25,6 +25,7 @@ dependencies {
     compile project(':serverapi-common')
     compile 'org.spongepowered:spongeapi:7.1.0'
     compile name: 'packetgate'
+    compile 'net.luckperms:api:5.0'
 }
 
 jar {

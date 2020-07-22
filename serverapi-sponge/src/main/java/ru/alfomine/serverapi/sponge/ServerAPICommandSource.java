@@ -1,5 +1,8 @@
 package ru.alfomine.serverapi.sponge;
 
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.Group;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.source.ConsoleSource;
@@ -19,9 +22,11 @@ import java.util.Set;
 public class ServerAPICommandSource implements ConsoleSource {
     private List<String> outputList = new ArrayList<>();
     private String name;
+    private String groupName;
 
-    public ServerAPICommandSource(String name) {
+    public ServerAPICommandSource(String name, String groupName) {
         this.name = name;
+        this.groupName = groupName;
     }
 
     @Override
@@ -36,6 +41,22 @@ public class ServerAPICommandSource implements ConsoleSource {
 
     public String getOutput() {
         return String.join("\n", outputList);
+    }
+
+    @Override
+    public Tristate getPermissionValue(Set<Context> contexts, String permission) {
+        if (groupName == null) return Tristate.TRUE;
+
+        LuckPerms api = LuckPermsProvider.get();
+        Group group = api.getGroupManager().getGroup(groupName);
+
+        if (group == null) {
+            System.out.println("Group " + groupName + " is null!");
+
+            return Tristate.TRUE;
+        }
+
+        return Tristate.fromBoolean(group.getCachedData().getPermissionData(api.getContextManager().getStaticQueryOptions()).checkPermission(permission).asBoolean());
     }
 
     // Остальное не нужно, но нужно
@@ -68,11 +89,6 @@ public class ServerAPICommandSource implements ConsoleSource {
     @Override
     public SubjectData getTransientSubjectData() {
         return Sponge.getServer().getConsole().getTransientSubjectData();
-    }
-
-    @Override
-    public Tristate getPermissionValue(Set<Context> contexts, String permission) {
-        return Tristate.TRUE;
     }
 
     @Override
